@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>余舍員工服務系統 - 簡化測試版</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-banner {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .test-section {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏨 余舍員工服務系統</h1>
+            <h2>簡化測試版</h2>
+        </div>
+        
+        <div class="test-banner">
+            <h3>🧪 測試模式已啟用</h3>
+            <p>所有通知信件將發送給HR，不會打擾到其他員工</p>
+        </div>
+        
+        <!-- API連線測試 -->
+        <div class="test-section">
+            <h3>1. API連線測試</h3>
+            <p>首先測試與後端API的連線是否正常</p>
+            
+            <div class="form-group">
+                <label for="apiUrl">Web App URL：</label>
+                <input type="url" id="apiUrl" placeholder="請輸入您的Google Apps Script Web App URL">
+                <small>格式：https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec</small>
+            </div>
+            
+            <button onclick="testConnection()">測試連線</button>
+            <div id="connectionResult"></div>
+        </div>
+        
+        <!-- 員工登入測試 -->
+        <div class="test-section">
+            <h3>2. 員工登入測試</h3>
+            
+            <div class="form-group">
+                <label for="employeeName">員工姓名：</label>
+                <select id="employeeName">
+                    <option value="">請選擇...</option>
+                    <option value="陳家興">陳家興</option>
+                    <option value="王彧疆">王彧疆</option>
+                    <option value="HR">HR</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="employeeId">員工編號：</label>
+                <input type="text" id="employeeId" placeholder="例如：A19104">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密碼：</label>
+                <input type="password" id="password" placeholder="至少6個字元">
+            </div>
+            
+            <button onclick="testLogin()">測試登入</button>
+            <button onclick="testSetPassword()">測試密碼設定</button>
+            <div id="loginResult"></div>
+        </div>
+        
+        <!-- 特休申請測試 -->
+        <div class="test-section">
+            <h3>3. 特休申請測試</h3>
+            
+            <div class="form-group">
+                <label for="leaveType">申請類型：</label>
+                <select id="leaveType">
+                    <option value="annual">特休</option>
+                    <option value="compensatory">補休</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="leaveHours">申請時數：</label>
+                <input type="number" id="leaveHours" value="8" step="0.5" min="0.5">
+            </div>
+            
+            <div class="form-group">
+                <label for="dutyDeputy">值班代理人：</label>
+                <select id="dutyDeputy">
+                    <option value="">請選擇...</option>
+                    <option value="王彧疆">王彧疆</option>
+                    <option value="陳家興">陳家興</option>
+                    <option value="HR">HR</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="leaveReason">申請事由：</label>
+                <textarea id="leaveReason" rows="3" placeholder="請說明申請原因...">個人事務處理</textarea>
+            </div>
+            
+            <button onclick="testLeaveApplication()">測試特休申請</button>
+            <div id="leaveResult"></div>
+        </div>
+        
+        <!-- 測試通知 -->
+        <div class="test-section">
+            <h3>4. 測試通知功能</h3>
+            
+            <div class="form-group">
+                <label for="testMessage">測試訊息：</label>
+                <textarea id="testMessage" rows="3" placeholder="輸入測試訊息...">這是一個系統測試訊息，用於驗證通知功能是否正常運作。</textarea>
+            </div>
+            
+            <button onclick="sendTestNotification()">發送測試通知</button>
+            <div id="notificationResult"></div>
+        </div>
+        
+        <!-- 系統狀態 -->
+        <div class="test-section">
+            <h3>5. 系統狀態檢查</h3>
+            <p>檢查系統的整體運作狀態</p>
+            
+            <button onclick="checkSystemStatus()">檢查系統狀態</button>
+            <div id="statusResult"></div>
+        </div>
+    </div>
+
+    <script>
+        let API_URL = '';
+        
+        // 測試連線
+        async function testConnection() {
+            const url = document.getElementById('apiUrl').value.trim();
+            const resultDiv = document.getElementById('connectionResult');
+            
+            if (!url) {
+                showResult(resultDiv, false, '請輸入Web App URL');
+                return;
+            }
+            
+            API_URL = url;
+            
+            try {
+                showResult(resultDiv, null, '正在測試連線...');
+                
+                const response = await fetch(url + '?action=status', {
+                    method: 'GET'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult(resultDiv, true, `連線成功！系統版本：${result.data.version}，測試模式：${result.data.testMode ? '啟用' : '停用'}`);
+                } else {
+                    showResult(resultDiv, false, '連線失敗：' + result.message);
+                }
+            } catch (error) {
+                showResult(resultDiv, false, '連線錯誤：' + error.message);
+            }
+        }
+        
+        // 測試登入
+        async function testLogin() {
+            if (!API_URL) {
+                alert('請先測試API連線');
+                return;
+            }
+            
+            const name = document.getElementById('employeeName').value;
+            const employeeId = document.getElementById('employeeId').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            if (!name || !employeeId || !password) {
+                showResult(resultDiv, false, '請填寫所有欄位');
+                return;
+            }
+            
+            try {
+                showResult(resultDiv, null, '正在驗證登入...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'verifyPassword',
+                        name: name,
+                        employeeId: employeeId,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult(resultDiv, true, `登入成功！歡迎 ${result.data.employee.name} (${result.data.employee.department})`);
+                } else {
+                    showResult(resultDiv, false, '登入失敗：' + result.message);
+                }
+            } catch (error) {
+                showResult(resultDiv, false, '登入錯誤：' + error.message);
+            }
+        }
+        
+        // 測試密碼設定
+        async function testSetPassword() {
+            if (!API_URL) {
+                alert('請先測試API連線');
+                return;
+            }
+            
+            const name = document.getElementById('employeeName').value;
+            const employeeId = document.getElementById('employeeId').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            if (!name || !employeeId || !password) {
+                showResult(resultDiv, false, '請填寫所有欄位');
+                return;
+            }
+            
+            try {
+                showResult(resultDiv, null, '正在設定密碼...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'setPassword',
+                        name: name,
+                        employeeId: employeeId,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult(resultDiv, true, `密碼設定成功！通知信件已發送給HR。員工：${result.data.employee.name}`);
+                } else {
+                    showResult(resultDiv, false, '密碼設定失敗：' + result.message);
+                }
+            } catch (error) {
+                showResult(resultDiv, false, '密碼設定錯誤：' + error.message);
+            }
+        }
+        
+        // 測試特休申請
+        async function testLeaveApplication() {
+            if (!API_URL) {
+                alert('請先測試API連線');
+                return;
+            }
+            
+            const employeeId = document.getElementById('employeeId').value;
+            const leaveType = document.getElementById('leaveType').value;
+            const leaveHours = document.getElementById('leaveHours').value;
+            const dutyDeputy = document.getElementById('dutyDeputy').value;
+            const leaveReason = document.getElementById('leaveReason').value;
+            const resultDiv = document.getElementById('leaveResult');
+            
+            if (!employeeId || !dutyDeputy || !leaveReason) {
+                showResult(resultDiv, false, '請填寫所有必要欄位');
+                return;
+            }
+            
+            try {
+                showResult(resultDiv, null, '正在提交申請...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'submitLeave',
+                        employeeId: employeeId,
+                        leaveType: leaveType,
+                        leaveHours: parseFloat(leaveHours),
+                        dutyDeputy: dutyDeputy,
+                        leaveReason: leaveReason
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult(resultDiv, true, `申請提交成功！申請編號：${result.data.applicationId}，通知信件已發送給HR。`);
+                } else {
+                    showResult(resultDiv, false, '申請提交失敗：' + result.message);
+                }
+            } catch (error) {
+                showResult(resultDiv, false, '申請提交錯誤：' + error.message);
+            }
+        }
+        
+        // 發送測試通知
+        async function sendTestNotification() {
+            if (!API_URL) {
+                alert('請先測試API連線');
+                return;
+            }
+            
+            const employeeId = document.getElementById('employeeId').value;
+            const message = document.getElementById('testMessage').value;
+            const resultDiv = document.getElementById('notificationResult');
+            
+            if (!employeeId || !message) {
+                showResult(resultDiv, false, '請填寫員工編號和測試訊息');
+                return;
+            }
+            
+            try {
+                showResult(resultDiv, null, '正在發送測試通知...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'sendTestEmail',
+                        employeeId: employeeId,
+                        message: message
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult(resultDiv, true, `測試通知發送成功！收件人：${result.data.recipient}`);
+                } else {
+                    showResult(resultDiv, false, '測試通知發送失敗：' + result.message);
+                }
+            } catch (error) {
+                showResult(resultDiv, false, '測試通知發送錯誤：' + error.message);
+            }
+        }
+        
+        // 檢查系統狀態
+        async function checkSystemStatus() {
+            if (!API_URL) {
+                alert('請先測試API連線');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('statusResult');
+            
+            try {
+                showResult(resultDiv, null, '正在檢查系統狀態...');
+                
+                const response = await fetch(API_URL + '?action=status');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const status = `
+                        系統狀態：正常運作<br>
+                        測試模式：${result.data.testMode ? '啟用' : '停用'}<br>
+                        系統版本：${result.data.version}<br>
+                        檢查時間：${new Date(result.data.timestamp).toLocaleString('zh-TW')}
+                    `;
+                    showResult(resultDiv, true, status);
+                } else {
+                    showResult(resultDiv, false, '系統狀態檢查失敗：' + result.message);
+                }
+            } catch (error) {
+                showResult(resultDiv, false, '系統狀態檢查錯誤：' + error.message);
+            }
+        }
+        
+        // 顯示結果
+        function showResult(element, success, message) {
+            if (success === null) {
+                element.innerHTML = `<div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 5px; border: 1px solid #ffeaa7;">${message}</div>`;
+            } else if (success) {
+                element.innerHTML = `<div class="result success">${message}</div>`;
+            } else {
+                element.innerHTML = `<div class="result error">${message}</div>`;
+            }
+        }
+        
+        // 自動填入建議值
+        document.getElementById('employeeName').addEventListener('change', function() {
+            const name = this.value;
+            const employeeIdField = document.getElementById('employeeId');
+            
+            switch(name) {
+                case '陳家興':
+                    employeeIdField.value = 'A19104';
+                    break;
+                case '王彧疆':
+                    employeeIdField.value = 'A19051';
+                    break;
+                case 'HR':
+                    employeeIdField.value = 'A19002';
+                    break;
+                default:
+                    employeeIdField.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
