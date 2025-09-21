@@ -1006,7 +1006,7 @@
 
     <script>
         // ==================== 配置設定 ====================
-        const API_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; // ⚠️ 請替換為您的Google Apps Script Web App URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxtILe9n-3zlLUBncRAgrl2so2l45qPxeN3Ct4fGHucbrR8Tp1jN85v266YgvjOMkt8sg/exec'; // ⚠️ 請替換為您的Google Apps Script Web App URL
 
         // ==================== 員工資料庫 ====================
         const EMPLOYEE_DATABASE = {
@@ -1093,7 +1093,7 @@
             }
 
             // 如果API_URL未設定，提供離線模式
-            if (API_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+            if (API_URL === 'https://script.google.com/macros/s/AKfycbxtILe9n-3zlLUBncRAgrl2so2l45qPxeN3Ct4fGHucbrR8Tp1jN85v266YgvjOMkt8sg/exec') {
                 alert('系統目前在離線模式運行，僅支援本地驗證。\n如需完整功能，請聯繫系統管理員設定API連線。');
                 return;
             }
