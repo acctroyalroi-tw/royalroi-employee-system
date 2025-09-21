@@ -57,7 +57,7 @@
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 30px
             text-align: center;
         }
 
@@ -629,7 +629,7 @@
 
     <script>
         // 全域變數
-        const WEBAPP_URL = 'YOUR_WEBAPP_URL_HERE'; // 請替換為實際的Web App URL
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxtILe9n-3zlLUBncRAgrl2so2l45qPxeN3Ct4fGHucbrR8Tp1jN85v266YgvjOMkt8sg/exec'; // 請替換為實際的Web App URL
         let currentUser = null;
 
         // 員工編號對應表
@@ -1016,10 +1016,10 @@
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 檢查是否設定了Web App URL
-            if (WEBAPP_URL === 'YOUR_WEBAPP_URL_HERE') {
+            if (WEBAPP_URL === 'https://script.google.com/macros/s/AKfycbxtILe9n-3zlLUBncRAgrl2so2l45qPxeN3Ct4fGHucbrR8Tp1jN85v266YgvjOMkt8sg/exec') {
                 showMessage('loginMessage', 
                     '⚠️ 請先設定Web App URL\n' +
-                    '請將程式碼中的 YOUR_WEBAPP_URL_HERE 替換為實際的Google Apps Script Web App URL', 
+                    '請將程式碼中的 https://script.google.com/macros/s/AKfycbxtILe9n-3zlLUBncRAgrl2so2l45qPxeN3Ct4fGHucbrR8Tp1jN85v266YgvjOMkt8sg/exec 替換為實際的Google Apps Script Web App URL', 
                     'error');
             }
             
