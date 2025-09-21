@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoyalRoi 員工服務系統 - 全員測試版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .test-mode-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        .all-employees-banner {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .login-section, .dashboard-section {
+            display: none;
+        }
+
+        .login-section.active, .dashboard-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .user-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .user-info p {
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .user-info .hours {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .user-info .hours span {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .service-card.direct-submit {
+            border-left: 5px solid #28a745;
+        }
+
+        .service-card.direct-submit .badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .service-card h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .service-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .service-card .icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .close:hover {
+            opacity: 1;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .alert.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .deputy-section {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+        }
+
+        .deputy-section h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .deputy-section .icon {
+            margin-right: 10px;
+            color: #ffc107;
+        }
+
+        .employee-count {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 全員測試模式橫幅 -->
+        <div class="test-mode-banner">
+            🧪 全員測試模式啟用中 - 所有通知發送給HR進行安全測試
+        </div>
+        
+        <!-- 全員支援橫幅 -->
+        <div class="all-employees-banner">
+            👥 支援所有20位員工 - 完整功能測試版本
+        </div>
+
+        <!-- 標題區域 -->
+        <div class="header">
+            <h1>🏨 RoyalRoi 員工服務系統</h1>
+            <p>全員測試版 - 現代化數位服務平台</p>
+            <div class="employee-count">
+                📊 支援員工總數：20位
+            </div>
+        </div>
+
+        <!-- 內容區域 -->
+        <div class="content">
+            <!-- 登入區域 -->
+            <div class="login-section active" id="loginSection">
+                <div class="form-group">
+                    <label for="loginType">選擇登入方式：</label>
+                    <select id="loginType" onchange="toggleLoginType()">
+                        <option value="first">首次登入（設定密碼）</option>
+                        <option value="normal">員工登入</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="employeeName">選擇您的姓名：</label>
+                    <select id="employeeName">
+                        <option value="">請選擇...</option>
+                        <option value="廖述盛">廖述盛 - 董事長</option>
+                        <option value="王彧疆">王彧疆 - 營運總監</option>
+                        <option value="陳家興">陳家興 - 管理部副理</option>
+                        <option value="黃崑境">黃崑境 - 工務主任</option>
+                        <option value="徐志屹">徐志屹 - 行銷業務主任</option>
+                        <option value="江孟庭">江孟庭 - 客務組長</option>
+                        <option value="蕭維宏">蕭維宏 - 客務組長</option>
+                        <option value="宋捷安">宋捷安 - 飯店管家</option>
+                        <option value="陳紅秀">陳紅秀 - 飯店管家</option>
+                        <option value="林家楙">林家楙 - 飯店管家</option>
+                        <option value="楊丞勛">楊丞勛 - 飯店管家</option>
+                        <option value="徐奕翔">徐奕翔 - 飯店管家</option>
+                        <option value="柯宗男">柯宗男 - 客務組長</option>
+                        <option value="李維萍">李維萍 - 客房部副理</option>
+                        <option value="許邦興">許邦興 - 資深房務員</option>
+                        <option value="王文一">王文一 - 資深房務組長</option>
+                        <option value="羅紹文">羅紹文 - 資深房務員</option>
+                        <option value="林奇緯">林奇緯 - 資深房務員</option>
+                        <option value="柳佳璋">柳佳璋 - 資深房務員</option>
+                        <option value="HR">HR - 人事</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="employeeId">員工編號：</label>
+                    <input type="text" id="employeeId" placeholder="請輸入您的員工編號">
+                </div>
+
+                <div id="firstLoginFields" style="display: none;">
+                    <button class="btn" onclick="verifyIdentity()">驗證身份</button>
+                    
+                    <div id="passwordSetupFields" style="display: none;">
+                        <div class="form-group">
+                            <label for="newPassword">設定密碼：</label>
+                            <input type="password" id="newPassword" placeholder="請輸入密碼（至少6個字元）">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">確認密碼：</label>
+                            <input type="password" id="confirmPassword" placeholder="請再次輸入密碼">
+                        </div>
+                        <button class="btn success" onclick="setupPassword()">設定密碼</button>
+                    </div>
+                </div>
+
+                <div id="normalLoginFields">
+                    <div class="form-group">
+                        <label for="password">密碼：</label>
+                        <input type="password" id="password" placeholder="請輸入您的密碼">
+                    </div>
+                    <button class="btn" onclick="login()">登入</button>
+                </div>
+
+                <div id="loginMessage"></div>
+            </div>
+
+            <!-- 儀表板區域 -->
+            <div class="dashboard-section" id="dashboardSection">
+                <div class="user-info" id="userInfo">
+                    <!-- 用戶資訊將在這裡顯示 -->
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card direct-submit" onclick="openLeaveApplication()">
+                        <div class="icon">🏖️</div>
+                        <h4>特休/補休申請<span class="badge">直接提交</span></h4>
+                        <p>直接在系統內提交特休或補休申請，無需跳轉到外部表單。支援自動時數計算和即時狀態更新。</p>
+                        <p><strong>✨ 新功能：</strong>包含值班代理人選擇</p>
+                    </div>
+
+                    <div class="service-card" onclick="openExternalForm('請假申請')">
+                        <div class="icon">🤒</div>
+                        <h4>請假申請</h4>
+                        <p>申請病假、事假等各類請假。系統會自動記錄並通知相關主管進行審核。</p>
+                    </div>
+
+                    <div class="service-card" onclick="openExternalForm('加班申請')">
+                        <div class="icon">⏰</div>
+                        <h4>加班申請</h4>
+                        <p>申請加班並記錄加班時數。支援不同類型的加班申請和自動計算補償。</p>
+                    </div>
+
+                    <div class="service-card" onclick="openExternalForm('調班申請')">
+                        <div class="icon">🔄</div>
+                        <h4>調班申請</h4>
+                        <p>申請與同事調換班次。系統會自動通知相關人員並記錄調班資訊。</p>
+                    </div>
+
+                    <div class="service-card" onclick="openExternalForm('補打卡申請')">
+                        <div class="icon">⏱️</div>
+                        <h4>補打卡申請</h4>
+                        <p>忘記打卡時可以申請補登記。需要填寫詳細的時間和原因說明。</p>
+                    </div>
+
+                    <div class="service-card" onclick="openExternalForm('房務獎金申請')">
+                        <div class="icon">💰</div>
+                        <h4>房務獎金申請</h4>
+                        <p>房務部員工專用的獎金申請功能。根據工作表現和客戶滿意度申請獎金。</p>
+                    </div>
+                </div>
+
+                <button class="btn secondary" onclick="logout()" style="margin-top: 30px;">登出</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 特休申請模態框 -->
+    <div id="leaveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeLeaveModal()">&times;</span>
+                <h3>🏖️ 特休/補休申請 - 全員測試版</h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert info">
+                    <strong>📋 全員測試模式說明：</strong><br>
+                    • 支援所有20位員工申請<br>
+                    • 使用真實時數資料進行驗證<br>
+                    • 測試模式下時數不會實際扣除<br>
+                    • 所有通知發送給HR進行測試
+                </div>
+
+                <div class="form-group">
+                    <label for="leaveType">申請類型：</label>
+                    <select id="leaveType" onchange="updateLeaveValidation()">
+                        <option value="annual">特休</option>
+                        <option value="compensatory">補休</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDateTime">開始日期時間：</label>
+                    <input type="datetime-local" id="startDateTime" onchange="calculateHours()">
+                </div>
+
+                <div class="form-group">
+                    <label for="endDateTime">結束日期時間：</label>
+                    <input type="datetime-local" id="endDateTime" onchange="calculateHours()">
+                </div>
+
+                <div class="form-group">
+                    <label>申請時數：</label>
+                    <input type="number" id="calculatedHours" step="0.5" min="0.5" readonly style="background-color: #f8f9fa;">
+                    <small style="color: #666; margin-top: 5px; display: block;">系統會自動計算工作時間</small>
+                </div>
+
+                <!-- 值班代理人選擇區域 -->
+                <div class="deputy-section">
+                    <h4><span class="icon">👤</span>值班代理人選擇</h4>
+                    <p style="color: #666; margin-bottom: 15px;">請選擇您請假期間的值班代理人：</p>
+                    <div class="form-group">
+                        <label for="dutyDeputy">值班代理人：</label>
+                        <select id="dutyDeputy">
+                            <option value="">請選擇代理人...</option>
+                            <option value="廖述盛">廖述盛 - 董事長</option>
+                            <option value="王彧疆">王彧疆 - 營運總監</option>
+                            <option value="陳家興">陳家興 - 管理部副理</option>
+                            <option value="黃崑境">黃崑境 - 工務主任</option>
+                            <option value="徐志屹">徐志屹 - 行銷業務主任</option>
+                            <option value="江孟庭">江孟庭 - 客務組長</option>
+                            <option value="蕭維宏">蕭維宏 - 客務組長</option>
+                            <option value="宋捷安">宋捷安 - 飯店管家</option>
+                            <option value="陳紅秀">陳紅秀 - 飯店管家</option>
+                            <option value="林家楙">林家楙 - 飯店管家</option>
+                            <option value="楊丞勛">楊丞勛 - 飯店管家</option>
+                            <option value="徐奕翔">徐奕翔 - 飯店管家</option>
+                            <option value="柯宗男">柯宗男 - 客務組長</option>
+                            <option value="李維萍">李維萍 - 客房部副理</option>
+                            <option value="許邦興">許邦興 - 資深房務員</option>
+                            <option value="王文一">王文一 - 資深房務組長</option>
+                            <option value="羅紹文">羅紹文 - 資深房務員</option>
+                            <option value="林奇緯">林奇緯 - 資深房務員</option>
+                            <option value="柳佳璋">柳佳璋 - 資深房務員</option>
+                            <option value="HR">HR - 人事</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="leaveReason">申請事由：</label>
+                    <textarea id="leaveReason" rows="3" placeholder="請簡述申請原因..." style="width: 100%; padding: 15px; border: 2px solid #e1e5e9; border-radius: 10px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+
+                <div id="leaveValidation" class="alert" style="display: none;"></div>
+
+                <div class="loading" id="leaveLoading">
+                    <div class="spinner"></div>
+                    <p>正在提交申請...</p>
+                </div>
+
+                <button class="btn success" id="submitLeaveBtn" onclick="submitLeaveApplication()">提交申請</button>
+                <button class="btn secondary" onclick="closeLeaveModal()">取消</button>
+
+                <div id="leaveResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全域變數
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxtILe9n-3zlLUBncRAgrl2so2l45qPxeN3Ct4fGHucbrR8Tp1jN85v266YgvjOMkt8sg/exec';
+        let currentUser = null;
+
+        // 員工編號對應表
+        const EMPLOYEE_IDS = {
+            '廖述盛': 'A19001',
+            '王彧疆': 'A19051', 
+            '陳家興': 'A19104',
+            '黃崑境': 'A19132',
+            '徐志屹': 'A19147',
+            '江孟庭': 'A19107',
+            '蕭維宏': 'A19024',
+            '宋捷安': 'A19114',
+            '陳紅秀': 'A19133',
+            '林家楙': 'A19145',
+            '楊丞勛': 'A19149',
+            '徐奕翔': 'A19152',
+            '柯宗男': 'A19140',
+            '李維萍': 'A19016',
+            '許邦興': 'A19065',
+            '王文一': 'A19146',
+            '羅紹文': 'A19118',
+            '林奇緯': 'A19136',
+            '柳佳璋': 'A19151',
+            'HR': 'A19002'
+        };
+
+        // 切換登入類型
+        function toggleLoginType() {
+            const loginType = document.getElementById('loginType').value;
+            const firstLoginFields = document.getElementById('firstLoginFields');
+            const normalLoginFields = document.getElementById('normalLoginFields');
+
+            if (loginType === 'first') {
+                firstLoginFields.style.display = 'block';
+                normalLoginFields.style.display = 'none';
+            } else {
+                firstLoginFields.style.display = 'none';
+                normalLoginFields.style.display = 'block';
+            }
+        }
+
+        // 驗證身份
+        async function verifyIdentity() {
+            const name = document.getElementById('employeeName').value;
+            const employeeId = document.getElementById('employeeId').value;
+
+            if (!name || !employeeId) {
+                showMessage('loginMessage', '請選擇姓名並輸入員工編號', 'error');
+                return;
+            }
+
+            const expectedId = EMPLOYEE_IDS[name];
+            if (employeeId !== expectedId) {
+                showMessage('loginMessage', '員工編號與姓名不匹配，請檢查輸入', 'error');
+                return;
+            }
+
+            showMessage('loginMessage', '✅ 身份驗證成功！請設定您的密碼', 'success');
+            document.getElementById('passwordSetupFields').style.display = 'block';
+        }
+
+        // 設定密碼
+        async function setupPassword() {
+            const name = document.getElementById('employeeName').value;
+            const employeeId = document.getElementById('employeeId').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!newPassword || !confirmPassword) {
+                showMessage('loginMessage', '請輸入密碼和確認密碼', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showMessage('loginMessage', '兩次輸入的密碼不一致', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showMessage('loginMessage', '密碼至少需要6個字元', 'error');
+                return;
+            }
+
+            try {
+                showMessage('loginMessage', '正在設定密碼...', 'info');
+
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify({
+                        action: 'setPassword',
+                        employeeId: employeeId,
+                        name: name,
+                        password: newPassword
+                    })
+                });
+
+                const responseText = await response.text();
+                const data = JSON.parse(responseText);
+
+                if (data.success) {
+                    showMessage('loginMessage', 
+                        `🎉 密碼設定成功！歡迎 ${data.data.employee.name}！\n` +
+                        `通知已發送給HR進行測試確認。\n` +
+                        `現在您可以使用新密碼登入系統。`, 'success');
+                    
+                    // 清空密碼欄位
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                    document.getElementById('passwordSetupFields').style.display = 'none';
+                    
+                    // 切換到正常登入模式
+                    document.getElementById('loginType').value = 'normal';
+                    toggleLoginType();
+                } else {
+                    showMessage('loginMessage', '❌ 密碼設定失敗：' + data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('loginMessage', '❌ 密碼設定失敗：' + error.message, 'error');
+            }
+        }
+
+        // 登入
+        async function login() {
+            const name = document.getElementById('employeeName').value;
+            const employeeId = document.getElementById('employeeId').value;
+            const password = document.getElementById('password').value;
+
+            if (!name || !employeeId || !password) {
+                showMessage('loginMessage', '請填寫所有必要資訊', 'error');
+                return;
+            }
+
+            const expectedId = EMPLOYEE_IDS[name];
+            if (employeeId !== expectedId) {
+                showMessage('loginMessage', '員工編號與姓名不匹配', 'error');
+                return;
+            }
+
+            try {
+                showMessage('loginMessage', '正在登入...', 'info');
+
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify({
+                        action: 'verifyPassword',
+                        employeeId: employeeId,
+                        name: name,
+                        password: password
+                    })
+                });
+
+                const responseText = await response.text();
+                const data = JSON.parse(responseText);
+
+                if (data.success) {
+                    currentUser = data.data.employee;
+                    showDashboard();
+                } else {
+                    showMessage('loginMessage', '❌ 登入失敗：' + data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('loginMessage', '❌ 登入失敗：' + error.message, 'error');
+            }
+        }
+
+        // 顯示儀表板
+        function showDashboard() {
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('dashboardSection').classList.add('active');
+
+            const userInfo = document.getElementById('userInfo');
+            userInfo.innerHTML = `
+                <h3>👋 歡迎，${currentUser.name}！</h3>
+                <p><strong>部門：</strong>${currentUser.department}</p>
+                <p><strong>職位：</strong>${currentUser.position}</p>
+                <p><strong>權限等級：</strong>${currentUser.authority}</p>
+                <p><strong>Email：</strong>${currentUser.email}</p>
+                <div class="hours">
+                    <span>🏖️ 特休：${currentUser.annualLeave} 小時</span>
+                    <span>⏰ 補休：${currentUser.compensatoryLeave} 小時</span>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <small><strong>🧪 測試模式：</strong>所有申請和通知會發送給HR進行測試，不會影響實際業務流程。</small>
+                </div>
+            `;
+        }
+
+        // 開啟特休申請
+        function openLeaveApplication() {
+            document.getElementById('leaveModal').style.display = 'block';
+            updateLeaveValidation();
+        }
+
+        // 關閉特休申請模態框
+        function closeLeaveModal() {
+            document.getElementById('leaveModal').style.display = 'none';
+            // 清空表單
+            document.getElementById('startDateTime').value = '';
+            document.getElementById('endDateTime').value = '';
+            document.getElementById('calculatedHours').value = '';
+            document.getElementById('dutyDeputy').value = '';
+            document.getElementById('leaveReason').value = '';
+            document.getElementById('leaveResult').innerHTML = '';
+            document.getElementById('leaveValidation').style.display = 'none';
+        }
+
+        // 計算時數
+        function calculateHours() {
+            const startDateTime = document.getElementById('startDateTime').value;
+            const endDateTime = document.getElementById('endDateTime').value;
+
+            if (startDateTime && endDateTime) {
+                const start = new Date(startDateTime);
+                const end = new Date(endDateTime);
+
+                if (end <= start) {
+                    document.getElementById('calculatedHours').value = '';
+                    updateLeaveValidation();
+                    return;
+                }
+
+                // 計算總小時數（簡化計算，實際可能需要考慮工作時間）
+                const diffMs = end - start;
+                const diffHours = diffMs / (1000 * 60 * 60);
+                
+                // 四捨五入到0.5小時
+                const roundedHours = Math.round(diffHours * 2) / 2;
+                document.getElementById('calculatedHours').value = roundedHours;
+            }
+
+            updateLeaveValidation();
+        }
+
+        // 更新申請驗證
+        function updateLeaveValidation() {
+            const leaveType = document.getElementById('leaveType').value;
+            const calculatedHours = parseFloat(document.getElementById('calculatedHours').value) || 0;
+            const dutyDeputy = document.getElementById('dutyDeputy').value;
+            const validation = document.getElementById('leaveValidation');
+            const submitBtn = document.getElementById('submitLeaveBtn');
+
+            let messages = [];
+            let canSubmit = true;
+
+            // 檢查時數
+            if (calculatedHours <= 0) {
+                messages.push('❌ 請設定正確的開始和結束時間');
+                canSubmit = false;
+            } else {
+                const availableHours = leaveType === 'annual' ? currentUser.annualLeave : currentUser.compensatoryLeave;
+                if (calculatedHours > availableHours) {
+                    messages.push(`❌ 申請時數 ${calculatedHours} 小時超過可用時數 ${availableHours} 小時`);
+                    canSubmit = false;
+                } else {
+                    messages.push(`✅ 申請 ${calculatedHours} 小時，剩餘 ${availableHours - calculatedHours} 小時`);
+                }
+            }
+
+            // 檢查代理人
+            if (!dutyDeputy) {
+                messages.push('❌ 請選擇值班代理人');
+                canSubmit = false;
+            } else {
+                messages.push(`✅ 值班代理人：${dutyDeputy}`);
+            }
+
+            if (messages.length > 0) {
+                validation.innerHTML = messages.join('<br>');
+                validation.className = 'alert ' + (canSubmit ? 'success' : 'error');
+                validation.style.display = 'block';
+            } else {
+                validation.style.display = 'none';
+            }
+
+            submitBtn.disabled = !canSubmit;
+            submitBtn.style.opacity = canSubmit ? '1' : '0.5';
+        }
+
+        // 提交申請
+        async function submitLeaveApplication() {
+            const leaveType = document.getElementById('leaveType').value;
+            const startDateTime = document.getElementById('startDateTime').value;
+            const endDateTime = document.getElementById('endDateTime').value;
+            const calculatedHours = parseFloat(document.getElementById('calculatedHours').value);
+            const dutyDeputy = document.getElementById('dutyDeputy').value;
+            const leaveReason = document.getElementById('leaveReason').value;
+
+            if (!startDateTime || !endDateTime || !calculatedHours || !dutyDeputy) {
+                showMessage('leaveResult', '請填寫所有必要資訊', 'error');
+                return;
+            }
+
+                try {
+                document.getElementById('leaveLoading').classList.add('show');
+                document.getElementById('submitLeaveBtn').disabled = true;
+
+                // 檢查參數
+                console.log('前端參數檢查:');
+                console.log('- currentUser:', currentUser);
+                console.log('- employeeId:', currentUser.employeeId);
+                console.log('- leaveType:', leaveType);
+                console.log('- calculatedHours:', calculatedHours);
+
+                const response = await fetch(WEBAPP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify({
+                        action: 'submitLeaveApplication',
+                        employeeId: currentUser.employeeId,
+                        leaveType: leaveType,
+                        startDateTime: startDateTime,
+                        endDateTime: endDateTime,
+                        leaveHours: calculatedHours,
+                        dutyDeputy: dutyDeputy,
+                        leaveReason: leaveReason
+                    })
+                });
+
+                const responseText = await response.text();
+                const data = JSON.parse(responseText);
+
+                if (data.success) {
+                    const resultMessage = `
+                        🎉 申請提交成功！<br><br>
+                        <strong>申請編號：</strong>${data.data.applicationId}<br>
+                        <strong>申請類型：</strong>${leaveType === 'annual' ? '特休' : '補休'}<br>
+                        <strong>申請時數：</strong>${calculatedHours} 小時<br>
+                        <strong>值班代理人：</strong>${dutyDeputy}<br>
+                        <strong>通知狀態：</strong>${data.data.emailSent ? '已發送給HR（測試模式）' : '發送失敗'}<br><br>
+                        <strong>🧪 測試模式說明：</strong><br>
+                        • 時數已實際扣除（${data.data.leaveUpdate.note}）<br>
+                        • 通知已發送給HR進行測試<br>
+                        • 申請資料已完整記錄
+                    `;
+                    showMessage('leaveResult', resultMessage, 'success');
+                    
+                    // 更新用戶時數顯示（模擬）
+                    if (data.data.leaveUpdate) {
+                        const hoursSpan = document.querySelector(leaveType === 'annual' ? '.hours span:first-child' : '.hours span:last-child');
+                        if (hoursSpan) {
+                            hoursSpan.innerHTML = `${leaveType === 'annual' ? '🏖️ 特休' : '⏰ 補休'}：${data.data.leaveUpdate.newHours} 小時`;
+                        }
+                    }
+                } else {
+                    showMessage('leaveResult', '❌ 申請提交失敗：' + data.message, 'error');
+                }
+            } catch (error) {
+                showMessage('leaveResult', '❌ 申請提交失敗：' + error.message, 'error');
+            } finally {
+                document.getElementById('leaveLoading').classList.remove('show');
+                document.getElementById('submitLeaveBtn').disabled = false;
+            }
+        }
+
+        // 開啟外部表單
+        function openExternalForm(formType) {
+            alert(`${formType}功能將在後續版本中開放。\n目前專注於特休/補休申請的完整測試。`);
+        }
+
+        // 登出
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboardSection').classList.remove('active');
+            document.getElementById('loginSection').classList.add('active');
+            
+            // 清空表單
+            document.getElementById('employeeName').value = '';
+            document.getElementById('employeeId').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginMessage').innerHTML = '';
+            
+            // 重置登入類型
+            document.getElementById('loginType').value = 'first';
+            toggleLoginType();
+        }
+
+        // 顯示訊息
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="alert ${type}">${message}</div>`;
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 檢查是否設定了Web App URL
+            if (WEBAPP_URL === 'YOUR_WEBAPP_URL_HERE') {
+                showMessage('loginMessage', 
+                    '⚠️ 請先設定Web App URL\n' +
+                    '請將程式碼中的 YOUR_WEBAPP_URL_HERE 替換為實際的Google Apps Script Web App URL', 
+                    'error');
+            }
+            
+            // 設定預設登入類型
+            toggleLoginType();
+            
+            // 為代理人選擇添加事件監聽
+            document.getElementById('dutyDeputy').addEventListener('change', updateLeaveValidation);
+        });
+
+        // 點擊模態框外部關閉
+        window.onclick = function(event) {
+            const modal = document.getElementById('leaveModal');
+            if (event.target === modal) {
+                closeLeaveModal();
+            }
+        }
+    </script>
+</body>
+</html>
