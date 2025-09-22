@@ -708,7 +708,7 @@
 
     <script>
         // API配置
-        const API_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; // ⚠️ 請替換為您的Google Apps Script Web App URL
+        const API_URL = ''; // ⚠️ 請替換為您的Google Apps Script Web App URL
 
         // 員工編號對應表
         const employeeCodes = {
@@ -837,7 +837,7 @@
                 }
 
                 // 如果API_URL未設定，提示使用本地模式
-                if (API_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                if (API_URL === 'https://script.google.com/macros/s/AKfycbzWgDH9bYPVsMg3NP07sP3bOBhT_6EMo9YxosfqKgwBMDs0SnlBaBdr0guBsDje40dS/exec') {
                     showMessage('loginError', '未設定密碼或密碼錯誤。請使用「首次登入」設定密碼，或聯繫管理員設定API連接。');
                     return;
                 }
@@ -935,7 +935,7 @@
                 localStorage.setItem(`password_${enteredCode}_${selectedName}`, hashPassword(newPassword));
 
                 // 如果API_URL已設定，嘗試同步到雲端
-                if (API_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                if (API_URL !== 'https://script.google.com/macros/s/AKfycbzWgDH9bYPVsMg3NP07sP3bOBhT_6EMo9YxosfqKgwBMDs0SnlBaBdr0guBsDje40dS/exec') {
                     try {
                         const response = await fetch(API_URL, {
                             method: 'POST',
@@ -1120,7 +1120,7 @@
                 let result;
                 
                 // 檢查API_URL是否已設定
-                if (API_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                if (API_URL === 'https://script.google.com/macros/s/AKfycbzWgDH9bYPVsMg3NP07sP3bOBhT_6EMo9YxosfqKgwBMDs0SnlBaBdr0guBsDje40dS/exec') {
                     // 本地模式
                     console.log('本地模式：直接處理申請');
                     result = {
@@ -1372,7 +1372,7 @@
                 let result;
                 
                 // 檢查API_URL是否已設定
-                if (API_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                if (API_URL === 'https://script.google.com/macros/s/AKfycbzWgDH9bYPVsMg3NP07sP3bOBhT_6EMo9YxosfqKgwBMDs0SnlBaBdr0guBsDje40dS/exec') {
                     // 本地模式
                     console.log('本地模式：直接處理申請');
                     result = {
