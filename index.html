@@ -1,1250 +1,331 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="余舍員工服務系統 - 完整版含後台管理">
-    <title>余舍員工服務系統</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 300;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .system-info {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: white;
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            display: none;
-        }
-
-        .alert.success {
-            background: rgba(40, 167, 69, 0.9);
-            color: white;
-        }
-
-        .alert.error {
-            background: rgba(220, 53, 69, 0.9);
-            color: white;
-        }
-
-        .alert.warning {
-            background: rgba(255, 193, 7, 0.9);
-            color: #333;
-        }
-
-        .alert.info {
-            background: rgba(23, 162, 184, 0.9);
-            color: white;
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .login-section {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .login-form {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .login-form select {
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            background: white;
-            min-width: 250px;
-        }
-
-        .login-form button {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: transform 0.2s ease;
-        }
-
-        .login-form button:hover {
-            transform: translateY(-2px);
-        }
-
-        .admin-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            margin-left: 10px;
-        }
-
-        .user-info {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .user-info.active {
-            display: block;
-        }
-
-        .user-info h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        .user-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .user-detail {
-            color: #666;
-        }
-
-        .user-detail strong {
-            color: #333;
-        }
-
-        .leave-balance {
-            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .leave-balance h4 {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .balance-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-        }
-
-        .balance-item {
-            text-align: center;
-        }
-
-        .balance-item .number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: block;
-        }
-
-        .balance-item .label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .service-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        .service-card h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .service-card p {
-            color: #666;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .service-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: transform 0.3s ease;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-
-        .service-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .service-btn.disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .service-btn.disabled:hover {
-            transform: none;
-        }
-
-        /* 表單樣式 */
-        .form-container {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .form-container.active {
-            display: block;
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .form-header h2 {
-            color: #333;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .form-header p {
-            color: #666;
-            font-size: 1rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .form-group label.required::after {
-            content: " *";
-            color: #dc3545;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .hours-warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        .hours-error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .form-actions button {
-            padding: 15px 40px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            min-width: 120px;
-        }
-
-        .form-actions .btn-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .form-actions .btn-submit {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .form-actions button:hover {
-            transform: translateY(-2px);
-        }
-
-        .form-actions button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .form-actions button:disabled:hover {
-            transform: none;
-        }
-
-        /* 管理後台樣式 */
-        .admin-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .admin-panel.active {
-            display: block;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .admin-controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .admin-controls select,
-        .admin-controls input {
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-
-        .admin-controls button {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .data-table th {
-            background: #f8f9fa;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .data-table tr:hover {
-            background: #f8f9fa;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-approved {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-rejected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .footer {
-            text-align: center;
-            color: white;
-            opacity: 0.7;
-            margin-top: 40px;
-            padding: 20px;
-        }
-
-        .footer small {
-            font-size: 0.9rem;
-        }
-
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .login-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .login-form select,
-            .login-form button {
-                width: 100%;
-            }
-
-            .user-details {
-                grid-template-columns: 1fr;
-            }
-
-            .balance-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .admin-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-
-            .admin-controls {
-                flex-direction: column;
-            }
-
-            .data-table {
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .balance-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .service-card {
-                padding: 20px;
-            }
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>余舍員工服務系統</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue";background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:20px}
+  .container{max-width:1100px;margin:0 auto}
+  .card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+  .header{color:#fff;text-align:center;margin-bottom:18px}
+  .header h1{font-weight:600}
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  label{font-weight:600;margin-bottom:6px;display:block;color:#333}
+  select,input,textarea{width:100%;border:2px solid #e1e5e9;border-radius:10px;padding:12px;font-size:16px}
+  select:focus,input:focus,textarea:focus{outline:none;border-color:#667eea}
+  .btn{display:inline-block;border:0;border-radius:10px;padding:12px 18px;font-weight:700;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+  .btn-ok{background:linear-gradient(135deg,#28a745,#20c997);color:#fff}
+  .btn-grey{background:#6c757d;color:#fff}
+  .alert{display:none;margin:12px 0;padding:12px;border-radius:10px;font-weight:700}
+  .alert.show{display:block}
+  .alert.success{background:rgba(40,167,69,.1);color:#2f8f46}
+  .alert.error{background:rgba(220,53,69,.1);color:#b02a37}
+  .stat{background:linear-gradient(135deg,#f7f9fc,#eef2f7);padding:14px;border-radius:12px;text-align:center}
+  .stat .v{font-size:24px;font-weight:800;color:#667eea}
+  .hidden{display:none}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- 系統標題 -->
-        <div class="header">
-            <h1>余舍員工服務系統</h1>
-            <p>完整版 - 含時數驗證與後台管理</p>
-        </div>
+<div class="container">
+  <div class="header">
+    <h1>🏢 余舍員工服務系統</h1>
+    <p>GitHub Pages + Google Apps Script</p>
+  </div>
 
-        <!-- 系統資訊 -->
-        <div class="system-info">
-            <small>🌐 即時時數驗證 | 📊 後台資料管理 | 📝 完整申請流程 | 🖨️ 資料查詢列印</small>
-        </div>
-
-        <!-- 系統提示 -->
-        <div id="systemAlert" class="alert">
-            系統已載入完成
-        </div>
-
-        <!-- 用戶登入區域 -->
-        <div class="login-section">
-            <h3>👤 選擇用戶身份</h3>
-            <div class="login-form">
-                <select id="userSelect">
-                    <option value="">請選擇用戶...</option>
-                    <option value="A19001">廖述盛 (A19001) - 董事長</option>
-                    <option value="A19051">王彧疆 (A19051) - 營運總監</option>
-                    <option value="A19104">陳家興 (A19104) - 管理部副理</option>
-                    <option value="A19132">黃崑境 (A19132) - 工務主任</option>
-                    <option value="A19147">徐志屹 (A19147) - 行銷業務主任</option>
-                    <option value="A19107">江孟庭 (A19107) - 客務組長</option>
-                    <option value="A19024">蕭維宏 (A19024) - 客務組長</option>
-                    <option value="A19114">宋捷安 (A19114) - 飯店管家</option>
-                    <option value="A19133">陳紅秀 (A19133) - 飯店管家</option>
-                    <option value="A19145">林家楙 (A19145) - 飯店管家</option>
-                    <option value="A19149">楊丞勛 (A19149) - 飯店管家</option>
-                    <option value="A19152">徐奕翔 (A19152) - 飯店管家</option>
-                    <option value="A19140">柯宗男 (A19140) - 客務組長</option>
-                    <option value="A19016">李維萍 (A19016) - 客房部副理</option>
-                    <option value="A19065">許邦興 (A19065) - 資深房務員</option>
-                    <option value="A19146">王文一 (A19146) - 資深房務組長</option>
-                    <option value="A19118">羅紹文 (A19118) - 資深房務員</option>
-                    <option value="A19136">林奇緯 (A19136) - 資深房務員</option>
-                    <option value="A19151">柳佳璋 (A19151) - 資深房務員</option>
-                    <option value="A19002">HR (A19002) - 管理員</option>
-                </select>
-                <button onclick="switchUser()">切換用戶</button>
-                <button class="admin-btn" onclick="showAdminPanel()">管理後台</button>
-            </div>
-        </div>
-
-        <!-- 用戶資訊區域 -->
-        <div id="userInfo" class="user-info">
-            <h3>👤 用戶資訊</h3>
-            <div class="user-details">
-                <div class="user-detail">
-                    <strong>姓名：</strong><span id="userName"></span>
-                </div>
-                <div class="user-detail">
-                    <strong>編號：</strong><span id="userId"></span>
-                </div>
-                <div class="user-detail">
-                    <strong>部門：</strong><span id="userDept"></span>
-                </div>
-                <div class="user-detail">
-                    <strong>職位：</strong><span id="userPosition"></span>
-                </div>
-                <div class="user-detail">
-                    <strong>Email：</strong><span id="userEmail"></span>
-                </div>
-                <div class="user-detail">
-                    <strong>權限：</strong><span id="userAuthority"></span>
-                </div>
-            </div>
-            
-            <div class="leave-balance">
-                <h4>📊 假期餘額</h4>
-                <div class="balance-grid">
-                    <div class="balance-item">
-                        <span class="number" id="annualLeave">0</span>
-                        <span class="label">特休時數</span>
-                    </div>
-                    <div class="balance-item">
-                        <span class="number" id="compensatoryLeave">0</span>
-                        <span class="label">補休時數</span>
-                    </div>
-                    <div class="balance-item">
-                        <span class="number" id="totalLeave">0</span>
-                        <span class="label">總可用時數</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 服務功能區域 -->
-        <div class="services-grid">
-            <!-- 調班申請 -->
-            <div class="service-card">
-                <div class="service-icon">🔄</div>
-                <h3>調班申請</h3>
-                <p>申請調整工作班次或更改工作時間</p>
-                <button class="service-btn" onclick="showForm('schedule')">立即申請</button>
-            </div>
-
-            <!-- 請假申請 -->
-            <div class="service-card">
-                <div class="service-icon">🏖️</div>
-                <h3>請假申請</h3>
-                <p>申請各類假期，包含事假、病假、特休等</p>
-                <button class="service-btn" onclick="showForm('leave')">立即申請</button>
-            </div>
-
-            <!-- 特休補休申請 -->
-            <div class="service-card">
-                <div class="service-icon">⏱️</div>
-                <h3>特休補休申請</h3>
-                <p>申請特休或補休，系統會即時檢查可用時數</p>
-                <button class="service-btn" onclick="showForm('vacation')">立即申請</button>
-            </div>
-
-            <!-- 房務獎金申請 -->
-            <div class="service-card">
-                <div class="service-icon">🏠</div>
-                <h3>房務獎金申請</h3>
-                <p>房務人員績效、清潔和服務獎金</p>
-                <button class="service-btn" onclick="showForm('bonus')">立即申請</button>
-            </div>
-
-            <!-- 加班申請 -->
-            <div class="service-card">
-                <div class="service-icon">⏰</div>
-                <h3>加班申請</h3>
-                <p>申請加班時數，系統將自動計算加班費</p>
-                <button class="service-btn" onclick="showForm('overtime')">立即申請</button>
-            </div>
-
-            <!-- 補打卡申請 -->
-            <div class="service-card">
-                <div class="service-icon">🕐</div>
-                <h3>補打卡申請</h3>
-                <p>忘記打卡時可以申請補登出勤記錄</p>
-                <button class="service-btn" onclick="showForm('clock')">立即申請</button>
-            </div>
-        </div>
-
-        <!-- 特休補休申請表單 -->
-        <div id="vacationForm" class="form-container">
-            <div class="form-header">
-                <h2>特休補休申請表單</h2>
-                <p>系統會即時檢查您的可用時數</p>
-            </div>
-            <form id="vacationApplicationForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="vacation_type" class="required">申請類型</label>
-                        <select id="vacation_type" name="vacationType" required onchange="updateAvailableHours()">
-                            <option value="">請選擇...</option>
-                            <option value="特休">特休</option>
-                            <option value="補休">補休</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_availableHours">可用時數</label>
-                        <input type="text" id="vacation_availableHours" readonly style="background: #f8f9fa;">
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_startDateTime" class="required">起始日期與時間</label>
-                        <input type="datetime-local" id="vacation_startDateTime" name="startDateTime" required onchange="calculateRequestedHours()">
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_endDateTime" class="required">結束日期與時間</label>
-                        <input type="datetime-local" id="vacation_endDateTime" name="endDateTime" required onchange="calculateRequestedHours()">
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_requestedHours">申請時數</label>
-                        <input type="number" id="vacation_requestedHours" name="requestedHours" step="0.5" min="0" readonly style="background: #f8f9fa;">
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_remainingHours">申請後剩餘時數</label>
-                        <input type="text" id="vacation_remainingHours" readonly style="background: #f8f9fa;">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="vacation_reason" class="required">申請事由</label>
-                        <textarea id="vacation_reason" name="reason" required placeholder="請詳細說明申請原因"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_deputy" class="required">職務代理人</label>
-                        <select id="vacation_deputy" name="deputy" required>
-                            <option value="">請選擇...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_applicantName" class="required">申請人姓名</label>
-                        <input type="text" id="vacation_applicantName" name="applicantName" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_applicantId" class="required">申請人編號</label>
-                        <input type="text" id="vacation_applicantId" name="applicantId" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_applicantDept" class="required">申請人部門</label>
-                        <input type="text" id="vacation_applicantDept" name="applicantDept" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="vacation_applicantPosition" class="required">申請人職位</label>
-                        <input type="text" id="vacation_applicantPosition" name="applicantPosition" required readonly>
-                    </div>
-                </div>
-                <div id="vacation_hoursWarning" class="hours-warning" style="display: none;"></div>
-                <div id="vacation_hoursError" class="hours-error" style="display: none;"></div>
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" onclick="hideForm()">取消</button>
-                    <button type="submit" class="btn-submit" id="vacation_submitBtn">提交申請</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 其他表單省略，結構類似... -->
-        <!-- 這裡會包含調班、請假、房務獎金、加班、補打卡等表單 -->
-
-        <!-- 管理後台 -->
-        <div id="adminPanel" class="admin-panel">
-            <div class="admin-header">
-                <h2>📊 管理後台</h2>
-                <button onclick="hideAdminPanel()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">關閉</button>
-            </div>
-            
-            <div class="admin-controls">
-                <select id="admin_filterType">
-                    <option value="">所有申請類型</option>
-                    <option value="schedule">調班申請</option>
-                    <option value="leave">請假申請</option>
-                    <option value="vacation">特休補休申請</option>
-                    <option value="bonus">房務獎金申請</option>
-                    <option value="overtime">加班申請</option>
-                    <option value="clock">補打卡申請</option>
-                </select>
-                
-                <select id="admin_filterStatus">
-                    <option value="">所有狀態</option>
-                    <option value="待審核">待審核</option>
-                    <option value="已核准">已核准</option>
-                    <option value="已拒絕">已拒絕</option>
-                </select>
-                
-                <input type="date" id="admin_filterDate" placeholder="篩選日期">
-                
-                <button onclick="filterApplications()">篩選</button>
-                <button onclick="exportData()">匯出資料</button>
-                <button onclick="printData()">列印</button>
-                <button onclick="refreshData()">重新整理</button>
-            </div>
-            
-            <div id="admin_dataContainer">
-                <table class="data-table" id="admin_dataTable">
-                    <thead>
-                        <tr>
-                            <th>申請編號</th>
-                            <th>申請類型</th>
-                            <th>申請人</th>
-                            <th>申請時間</th>
-                            <th>狀態</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin_dataBody">
-                        <!-- 資料會動態載入 -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- 頁腳 -->
-        <div class="footer">
-            <small>© 2025 余舍員工服務系統 | 完整版 v5.0 | 含時數驗證與後台管理</small>
-        </div>
+  <div class="card">
+    <div id="sysAlert" class="alert"></div>
+    <div class="grid">
+      <div>
+        <label for="employeeSelect">登入身份</label>
+        <select id="employeeSelect"></select>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button id="btnLogin" class="btn btn-primary">登入</button>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // 內建 API URL - 部署後端後請更新此 URL
-        const API_URL = 'https://script.google.com/macros/s/AKfycbySvHG0bZQfolqJ-K2pbk2YhPIxXp8EuVzLp-nhXWY3b-Xnj-HW4msGpIOEuVIM80u60w/exec';
+  <div id="meCard" class="card hidden" style="margin-top:14px">
+    <h3>📊 個人資訊</h3>
+    <div id="me"></div>
+    <div class="grid" style="margin-top:14px">
+      <div class="stat"><div class="v" id="statTotal">0</div><div>總申請數</div></div>
+      <div class="stat"><div class="v" id="statPending">0</div><div>待審核</div></div>
+      <div class="stat"><div class="v" id="statApproved">0</div><div>已核准</div></div>
+      <div class="stat"><div class="v" id="statAL">0</div><div>特休餘額(小時)</div></div>
+    </div>
+  </div>
 
-        // 完整員工資料
-        const EMPLOYEES = {
-            'A19001': { name: '廖述盛', department: '董事長室', position: '董事長', email: 'ssalex.liaw@gmail.com', annualLeave: 0, compensatoryLeave: 0, authority: '主管' },
-            'A19051': { name: '王彧疆', department: '董事長室', position: '營運總監', email: 'ea.royalroi@gmail.com', annualLeave: 103, compensatoryLeave: 0, authority: '主管' },
-            'A19104': { name: '陳家興', department: '管理部', position: '管理部副理', email: 'airforce0722@gmail.com', annualLeave: 68, compensatoryLeave: 0.5, authority: '員工' },
-            'A19132': { name: '黃崑境', department: '管理部', position: '工務主任', email: 'drogn1129@gmail.com', annualLeave: 61, compensatoryLeave: 0.5, authority: '員工' },
-            'A19147': { name: '徐志屹', department: '行銷業務部', position: '行銷業務主任', email: 'joe70041@gmail.com', annualLeave: 11, compensatoryLeave: 0, authority: '員工' },
-            'A19107': { name: '江孟庭', department: '客房部', position: '客務組長', email: 'pig52869@gmail.com', annualLeave: 119.5, compensatoryLeave: 0, authority: '員工' },
-            'A19024': { name: '蕭維宏', department: '客房部', position: '客務組長', email: 'xwh30819@gmail.com', annualLeave: 130.5, compensatoryLeave: 0, authority: '員工' },
-            'A19114': { name: '宋捷安', department: '客房部', position: '飯店管家', email: 'aquarius00216@gmail.com', annualLeave: 199, compensatoryLeave: 0.5, authority: '員工' },
-            'A19133': { name: '陳紅秀', department: '客房部', position: '飯店管家', email: 'hx930310@gmail.com', annualLeave: 62.5, compensatoryLeave: 0, authority: '員工' },
-            'A19145': { name: '林家楙', department: '客房部', position: '飯店管家', email: 'brcl67@gmail.com', annualLeave: 78.3, compensatoryLeave: 0, authority: '員工' },
-            'A19149': { name: '楊丞勛', department: '客房部', position: '飯店管家', email: 'a0977442924@gmail.com', annualLeave: 0, compensatoryLeave: 0, authority: '員工' },
-            'A19152': { name: '徐奕翔', department: '客房部', position: '飯店管家', email: 'ken0976887280@gmail.com', annualLeave: 0, compensatoryLeave: 0, authority: '員工' },
-            'A19140': { name: '柯宗男', department: '客房部', position: '客務組長', email: '1306allen@gmail.com', annualLeave: 72, compensatoryLeave: 3.5, authority: '員工' },
-            'A19016': { name: '李維萍', department: '客房部', position: '客房部副理', email: 'glad09120@gmail.com', annualLeave: 125, compensatoryLeave: 5, authority: '員工' },
-            'A19065': { name: '許邦興', department: '客房部', position: '資深房務員', email: 'kandyhsu188@gmail.com', annualLeave: 120, compensatoryLeave: 1, authority: '員工' },
-            'A19146': { name: '王文一', department: '客房部', position: '資深房務組長', email: 'elmo.jpgo@gmail.com', annualLeave: 47.5, compensatoryLeave: 0, authority: '員工' },
-            'A19118': { name: '羅紹文', department: '客房部', position: '資深房務員', email: 'shawn820419@gmail.com', annualLeave: 58.5, compensatoryLeave: 0, authority: '員工' },
-            'A19136': { name: '林奇緯', department: '客房部', position: '資深房務員', email: 'm1493487210@gmail.com', annualLeave: 56, compensatoryLeave: 0, authority: '員工' },
-            'A19151': { name: '柳佳璋', department: '客房部', position: '資深房務員', email: 'andrea.liou71@gmail.com', annualLeave: 0, compensatoryLeave: 0, authority: '員工' },
-            'A19002': { name: 'HR', department: '管理部', position: 'HR', email: 'acct.royalroi@gmail.com', annualLeave: 0, compensatoryLeave: 0, authority: '管理員' }
-        };
+  <div id="svcCard" class="card hidden" style="margin-top:14px">
+    <h3>🛠️ 申請服務</h3>
+    <div class="grid">
+      <button class="btn btn-primary" onclick="openForm('leave')">請假申請</button>
+      <button class="btn btn-primary" onclick="openForm('vacation')">特休/補休申請</button>
+      <button class="btn btn-primary" onclick="openForm('schedule')">調班申請</button>
+      <button class="btn btn-primary" onclick="openForm('overtime')">加班申請</button>
+      <button class="btn btn-primary" onclick="openForm('clock')">補打卡申請</button>
+      <button class="btn btn-primary" onclick="openForm('bonus')">房務獎金申請</button>
+    </div>
+  </div>
 
-        let currentUser = null;
-        let currentForm = null;
+  <div id="formCard" class="card hidden" style="margin-top:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 id="formTitle">表單</h3>
+      <button class="btn btn-grey" onclick="closeForm()">關閉</button>
+    </div>
+    <form id="theForm">
+      <div id="formBody"></div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:14px">
+        <button type="button" class="btn btn-grey" onclick="closeForm()">取消</button>
+        <button id="btnSubmit" class="btn btn-ok" type="submit">提交申請</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-        // 初始化系統
-        function initSystem() {
-            showAlert('系統已載入完成，請選擇用戶身份開始使用', 'info');
-            
-            // 3秒後隱藏提示
-            setTimeout(() => {
-                hideAlert();
-            }, 3000);
-        }
+<script>
+  // ======== 設定 ========
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxSEW2gOsAkWYe81BQFNtE7cf6csRg1F2aitgO5YZqb26XCfyxqjMQUHvKXwEkSiPJ8/exec'; // ←改成你的 Web App URL
+  const ORIGIN_HINT = location.origin; // 顯示用途
+  // =====================
 
-        // 切換用戶
-        function switchUser() {
-            const selectedUser = document.getElementById('userSelect').value;
-            if (!selectedUser) {
-                hideUserInfo();
-                return;
-            }
+  const el = (id)=>document.getElementById(id);
+  const qs = (s)=>document.querySelector(s);
+  const state = { user:null, employees:[] };
 
-            currentUser = selectedUser;
-            const userData = EMPLOYEES[selectedUser];
-            
-            // 更新用戶資訊
-            document.getElementById('userName').textContent = userData.name;
-            document.getElementById('userId').textContent = selectedUser;
-            document.getElementById('userDept').textContent = userData.department;
-            document.getElementById('userPosition').textContent = userData.position;
-            document.getElementById('userEmail').textContent = userData.email;
-            document.getElementById('userAuthority').textContent = userData.authority;
-            
-            // 更新假期餘額
-            document.getElementById('annualLeave').textContent = userData.annualLeave;
-            document.getElementById('compensatoryLeave').textContent = userData.compensatoryLeave;
-            document.getElementById('totalLeave').textContent = userData.annualLeave + userData.compensatoryLeave;
-            
-            showUserInfo();
-            populateDeputyOptions();
-        }
+  function alertBox(type,msg){
+    const a = el('sysAlert');
+    a.className = 'alert show ' + (type||'success');
+    a.textContent = msg;
+    setTimeout(()=>a.className='alert',4000);
+  }
 
-        // 填充職務代理人選項
-        function populateDeputyOptions() {
-            const deputySelects = document.querySelectorAll('select[name="deputy"]');
-            
-            deputySelects.forEach(select => {
-                select.innerHTML = '<option value="">請選擇...</option>';
-                
-                Object.entries(EMPLOYEES).forEach(([id, employee]) => {
-                    if (id !== currentUser) {
-                        const option = document.createElement('option');
-                        option.value = employee.name;
-                        option.textContent = `${employee.name} (${employee.position})`;
-                        select.appendChild(option);
-                    }
-                });
-            });
-        }
+  async function api(method, payload){
+    const opt = { method, headers: { 'Content-Type': 'application/json' } };
+    if(method==='POST') opt.body = JSON.stringify(payload||{});
+    const url = method==='GET'
+      ? `${API_URL}?${new URLSearchParams(payload||{}).toString()}`
+      : API_URL;
+    const r = await fetch(url, opt);
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const j = await r.json();
+    if(!j.success) throw new Error(j.message||'failed');
+    return j.data;
+  }
 
-        // 顯示用戶資訊
-        function showUserInfo() {
-            document.getElementById('userInfo').classList.add('active');
-        }
+  async function boot(){
+    try{
+      const data = await api('GET',{action:'listEmployees'});
+      state.employees = data.employees||[];
+      const sel = el('employeeSelect');
+      sel.innerHTML = `<option value="">請選擇</option>` + state.employees.map(e=>(
+        `<option value="${e.id}">${e.name}（${e.position}）</option>`
+      )).join('');
+    }catch(e){
+      alertBox('error','讀取員工清單失敗');
+    }
+  }
 
-        // 隱藏用戶資訊
-        function hideUserInfo() {
-            document.getElementById('userInfo').classList.remove('active');
-        }
+  async function login(){
+    const id = el('employeeSelect').value;
+    if(!id) return alertBox('error','請選擇身份');
+    try{
+      const me = await api('POST',{ action:'login', employeeId:id });
+      state.user = me;
+      renderMe(me);
+      el('meCard').classList.remove('hidden');
+      el('svcCard').classList.remove('hidden');
+      alertBox('success',`歡迎，${me.name}`);
+    }catch(e){
+      alertBox('error','登入失敗');
+    }
+  }
 
-        // 顯示表單
-        function showForm(formType) {
-            if (!currentUser) {
-                showAlert('請先選擇用戶身份', 'error');
-                return;
-            }
+  function renderMe(me){
+    el('me').innerHTML =
+      `<p><b>姓名：</b>${me.name}</p>
+       <p><b>員工編號：</b>${me.id}</p>
+       <p><b>部門：</b>${me.department}</p>
+       <p><b>職位：</b>${me.position}</p>
+       <p><b>權限：</b>${me.authority}</p>`;
+    el('statTotal').textContent = me.stats.total||0;
+    el('statPending').textContent = me.stats.pending||0;
+    el('statApproved').textContent = me.stats.approved||0;
+    el('statAL').textContent = me.annualLeave||0;
+  }
 
-            // 隱藏所有表單和管理面板
-            hideForm();
-            hideAdminPanel();
+  const FORMS = {
+    leave:{
+      title:'🏖️ 請假申請',
+      html:`
+        <label>假別 *</label>
+        <select name="leaveType" required>
+          <option value="">請選擇</option>
+          <option>事假</option><option>病假</option><option>婚假</option>
+          <option>喪假</option><option>產假</option><option>陪產假</option>
+          <option>家庭照顧假</option><option>生理假</option>
+        </select>
+        <div class="grid" style="margin-top:12px">
+          <div><label>起始 *</label><input type="datetime-local" name="startDateTime" required></div>
+          <div><label>結束 *</label><input type="datetime-local" name="endDateTime" required></div>
+        </div>
+        <div style="margin-top:12px">
+          <label>事由 *</label>
+          <textarea name="reason" required></textarea>
+        </div>`
+    },
+    vacation:{
+      title:'🌴 特休/補休申請',
+      html:`
+        <label>類型 *</label>
+        <select name="vacationType" required>
+          <option value="">請選擇</option><option>特休</option><option>補休</option>
+        </select>
+        <div class="grid" style="margin-top:12px">
+          <div><label>起始 *</label><input type="datetime-local" name="startDateTime" required></div>
+          <div><label>結束 *</label><input type="datetime-local" name="endDateTime" required></div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>申請時數 *</label><input type="number" name="requestedHours" step="0.5" min="0.5" required></div>
+        </div>
+        <div style="margin-top:12px">
+          <label>事由 *</label>
+          <textarea name="reason" required></textarea>
+        </div>`
+    },
+    schedule:{
+      title:'🔄 調班申請',
+      html:`
+        <div class="grid">
+          <div><label>原日期 *</label><input type="date" name="originalDate" required></div>
+          <div><label>原班別 *</label>
+            <select name="originalShift" required>
+              <option value="">請選擇</option>
+              <option>早班 06:00-14:00</option><option>中班 14:00-22:00</option>
+              <option>晚班 22:00-06:00</option><option>大夜班 00:00-08:00</option>
+              <option>行政班 09:00-18:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>新日期 *</label><input type="date" name="newDate" required></div>
+          <div><label>新班別 *</label>
+            <select name="newShift" required>
+              <option value="">請選擇</option>
+              <option>早班 06:00-14:00</option><option>中班 14:00-22:00</option>
+              <option>晚班 22:00-06:00</option><option>大夜班 00:00-08:00</option>
+              <option>行政班 09:00-18:00</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label>事由 *</label><textarea name="reason" required></textarea>
+        </div>`
+    },
+    overtime:{
+      title:'⏰ 加班申請',
+      html:`
+        <div class="grid">
+          <div><label>類型 *</label>
+            <select name="overtimeType" required>
+              <option value="">請選擇</option><option>平日加班</option><option>假日加班</option><option>國定假日加班</option>
+            </select>
+          </div>
+          <div><label>處理方式 *</label>
+            <select name="processMethod" required>
+              <option value="">請選擇</option><option>補休</option><option>加班費</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>起始 *</label><input type="datetime-local" name="startDateTime" required></div>
+          <div><label>結束 *</label><input type="datetime-local" name="endDateTime" required></div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>加班時數 *</label><input type="number" name="overtimeHours" step="0.5" min="0.5" required></div>
+        </div>
+        <div style="margin-top:12px">
+          <label>事由 *</label><textarea name="reason" required></textarea>
+        </div>`
+    },
+    clock:{
+      title:'🕐 補打卡申請',
+      html:`
+        <div class="grid">
+          <div><label>日期 *</label><input type="date" name="clockDate" required></div>
+          <div><label>時間 *</label><input type="time" name="clockTime" required></div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>類型 *</label>
+            <select name="clockType" required>
+              <option value="">請選擇</option><option>上班</option><option>下班</option><option>外出</option><option>返回</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label>原因 *</label><textarea name="reason" required></textarea>
+        </div>`
+    },
+    bonus:{
+      title:'🏠 房務獎金申請',
+      html:`
+        <div class="grid">
+          <div><label>預房日期 *</label><input type="date" name="bonusDate" required></div>
+          <div><label>預房間數 *</label><input type="number" name="roomCount" min="0" required></div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>預房房號 *</label><input name="roomNumber" placeholder="例：101,102" required></div>
+          <div><label>清潔間數 *</label><input type="number" name="cleanCount" min="0" required></div>
+        </div>
+        <div class="grid" style="margin-top:12px">
+          <div><label>清潔房號 *</label><input name="cleanNumber" placeholder="例：201,202" required></div>
+          <div><label>折扣間數</label><input type="number" name="discountCount" min="0"></div>
+        </div>
+        <div style="margin-top:12px">
+          <label>折扣房號</label><input name="discountNumber" placeholder="例：301,302">
+        </div>`
+    }
+  };
 
-            // 顯示指定表單
-            const formElement = document.getElementById(formType + 'Form');
-            if (formElement) {
-                formElement.classList.add('active');
-                currentForm = formType;
-                
-                // 填入用戶資訊
-                fillUserInfo(formType);
-                
-                // 特殊處理特休補休表單
-                if (formType === 'vacation') {
-                    updateAvailableHours();
-                }
-                
-                // 滾動到表單位置
-                formElement.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
+  function openForm(kind){
+    if(!state.user){ alertBox('error','請先登入'); return; }
+    el('formTitle').textContent = FORMS[kind].title;
+    el('formBody').innerHTML = FORMS[kind].html + `<input type="hidden" name="__kind" value="${kind}">`;
+    el('formCard').classList.remove('hidden');
+    el('formCard').scrollIntoView({behavior:'smooth'});
+  }
+  function closeForm(){ el('theForm').reset(); el('formCard').classList.add('hidden'); }
 
-        // 隱藏表單
-        function hideForm() {
-            const forms = document.querySelectorAll('.form-container');
-            forms.forEach(form => {
-                form.classList.remove('active');
-            });
-            currentForm = null;
-        }
+  el('btnLogin').addEventListener('click', login);
 
-        // 填入用戶資訊
-        function fillUserInfo(formType) {
-            const userData = EMPLOYEES[currentUser];
-            const prefix = formType + '_';
-            
-            // 填入申請人資訊
-            const nameField = document.getElementById(prefix + 'applicantName');
-            const idField = document.getElementById(prefix + 'applicantId');
-            const deptField = document.getElementById(prefix + 'applicantDept');
-            const positionField = document.getElementById(prefix + 'applicantPosition');
-            
-            if (nameField) nameField.value = userData.name;
-            if (idField) idField.value = currentUser;
-            if (deptField) deptField.value = userData.department;
-            if (positionField) positionField.value = userData.position;
-        }
+  el('theForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    if(!state.user) return alertBox('error','未登入');
+    const fd = new FormData(e.target);
+    const data = Object.fromEntries(fd.entries());
+    const kind = data.__kind; delete data.__kind;
+    const payload = { action:'submitApplication', applicationType:kind, submittedById:state.user.id, ...data };
+    const btn = el('btnSubmit'); const t = btn.textContent; btn.disabled=true; btn.textContent='提交中…';
+    try{
+      const res = await api('POST', payload);
+      alertBox('success', `已送出，編號：${res.applicationId}`);
+      // 重新抓個人統計與餘額
+      const me = await api('POST',{ action:'login', employeeId:state.user.id });
+      state.user = me; renderMe(me);
+      closeForm();
+    }catch(err){
+      alertBox('error', err.message||'提交失敗');
+    }finally{
+      btn.disabled=false; btn.textContent=t;
+    }
+  });
 
-        // 更新可用時數
-        function updateAvailableHours() {
-            const vacationType = document.getElementById('vacation_type').value;
-            const userData = EMPLOYEES[currentUser];
-            
-            if (!vacationType || !userData) return;
-            
-            let availableHours = 0;
-            if (vacationType === '特休') {
-                availableHours = userData.annualLeave;
-            } else if (vacationType === '補休') {
-                availableHours = userData.compensatoryLeave;
-            }
-            
-            document.getElementById('vacation_availableHours').value = availableHours + ' 小時';
-            calculateRequestedHours();
-        }
-
-        // 計算申請時數
-        function calculateRequestedHours() {
-            const startDateTime = document.getElementById('vacation_startDateTime').value;
-            const endDateTime = document.getElementById('vacation_endDateTime').value;
-            const vacationType = document.getElementById('vacation_type').value;
-            
-            if (!startDateTime || !endDateTime || !vacationType) return;
-            
-            const start = new Date(startDateTime);
-            const end = new Date(endDateTime);
-            
-            if (end <= start) {
-                showHoursError('結束時間必須晚於開始時間');
-                return;
-            }
-            
-            // 計算時數差異
-            const diffMs = end - start;
-            const diffHours = diffMs / (1000 * 60 * 60);
-            
-            document.getElementById('vacation_requestedHours').value = diffHours;
-            
-            // 檢查是否超過可用時數
-            const userData = EMPLOYEES[currentUser];
-            let availableHours = 0;
-            if (vacationType === '特休') {
-                availableHours = userData.annualLeave;
-            } else if (vacationType === '補休') {
-                availableHours = userData.compensatoryLeave;
-            }
-            
-            const remainingHours = availableHours - diffHours;
-            document.getElementById('vacation_remainingHours').value = remainingHours + ' 小時';
-            
-            // 顯示警告或錯誤
-            if (remainingHours < 0) {
-                showHoursError(`申請時數 ${diffHours} 小時超過可用時數 ${availableHours} 小時，無法提交申請`);
-                document.getElementById('vacation_submitBtn').disabled = true;
-            } else if (remainingHours < 8) {
-                showHoursWarning(`申請後剩餘時數較少 (${remainingHours} 小時)，請確認是否繼續`);
-                document.getElementById('vacation_submitBtn').disabled = false;
-            } else {
-                hideHoursMessages();
-                document.getElementById('vacation_submitBtn').disabled = false;
-            }
-        }
-
-        // 顯示時數警告
-        function showHoursWarning(message) {
-            hideHoursMessages();
-            const warningDiv = document.getElementById('vacation_hoursWarning');
-            warningDiv.textContent = message;
-            warningDiv.style.display = 'block';
-        }
-
-        // 顯示時數錯誤
-        function showHoursError(message) {
-            hideHoursMessages();
-            const errorDiv = document.getElementById('vacation_hoursError');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        // 隱藏時數訊息
-        function hideHoursMessages() {
-            document.getElementById('vacation_hoursWarning').style.display = 'none';
-            document.getElementById('vacation_hoursError').style.display = 'none';
-        }
-
-        // 顯示管理後台
-        function showAdminPanel() {
-            hideForm();
-            document.getElementById('adminPanel').classList.add('active');
-            loadAdminData();
-        }
-
-        // 隱藏管理後台
-        function hideAdminPanel() {
-            document.getElementById('adminPanel').classList.remove('active');
-        }
-
-        // 載入管理資料
-        function loadAdminData() {
-            // 這裡會從後端載入所有申請資料
-            // 暫時顯示示例資料
-            const tbody = document.getElementById('admin_dataBody');
-            tbody.innerHTML = `
-                <tr>
-                    <td>VAC20250923001</td>
-                    <td>特休補休申請</td>
-                    <td>陳家興</td>
-                    <td>2025-09-23 10:30</td>
-                    <td><span class="status-badge status-pending">待審核</span></td>
-                    <td>
-                        <button onclick="approveApplication('VAC20250923001')" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; margin-right: 5px; cursor: pointer;">核准</button>
-                        <button onclick="rejectApplication('VAC20250923001')" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">拒絕</button>
-                    </td>
-                </tr>
-            `;
-        }
-
-        // 處理表單提交
-        function handleFormSubmit(event, formType) {
-            event.preventDefault();
-            
-            const formData = new FormData(event.target);
-            const data = {};
-            
-            // 收集表單資料
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
-            }
-            
-            // 添加申請類型和用戶資訊
-            data.applicationType = formType;
-            data.submittedAt = new Date().toISOString();
-            data.submittedBy = EMPLOYEES[currentUser].name;
-            data.submittedById = currentUser;
-            
-            // 提交到後端
-            submitApplication(data);
-        }
-
-        // 提交申請到後端
-        async function submitApplication(data) {
-            showAlert('正在提交申請...', 'info');
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'submitApplication',
-                        ...data
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('網路請求失敗 (HTTP ' + response.status + ')');
-                }
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showAlert('申請提交成功！申請編號：' + (result.data?.applicationId || '系統生成中'), 'success');
-                    hideForm();
-                    
-                    // 重置表單
-                    if (currentForm) {
-                        document.getElementById(currentForm + 'ApplicationForm').reset();
-                        fillUserInfo(currentForm);
-                    }
-                } else {
-                    showAlert('申請提交失敗：' + result.message, 'error');
-                }
-                
-            } catch (error) {
-                console.error('提交錯誤:', error);
-                showAlert('提交失敗：' + error.message + '。請檢查網路連接或聯繫系統管理員。', 'error');
-            }
-        }
-
-        // 顯示系統提示
-        function showAlert(message, type = 'info') {
-            const alert = document.getElementById('systemAlert');
-            alert.textContent = message;
-            alert.className = `alert ${type} show`;
-            
-            // 5秒後自動隱藏
-            setTimeout(() => {
-                hideAlert();
-            }, 5000);
-        }
-
-        // 隱藏系統提示
-        function hideAlert() {
-            const alert = document.getElementById('systemAlert');
-            alert.classList.remove('show');
-        }
-
-        // 管理功能
-        function filterApplications() {
-            showAlert('篩選功能開發中', 'info');
-        }
-
-        function exportData() {
-            showAlert('匯出功能開發中', 'info');
-        }
-
-        function printData() {
-            window.print();
-        }
-
-        function refreshData() {
-            loadAdminData();
-            showAlert('資料已重新整理', 'success');
-        }
-
-        function approveApplication(id) {
-            showAlert(`申請 ${id} 已核准`, 'success');
-        }
-
-        function rejectApplication(id) {
-            showAlert(`申請 ${id} 已拒絕`, 'warning');
-        }
-
-        // 綁定表單提交事件
-        document.addEventListener('DOMContentLoaded', function() {
-            // 特休補休申請表單
-            document.getElementById('vacationApplicationForm').addEventListener('submit', function(e) {
-                handleFormSubmit(e, 'vacation');
-            });
-            
-            // 初始化系統
-            initSystem();
-        });
-    </script>
+  boot();
+</script>
 </body>
 </html>
